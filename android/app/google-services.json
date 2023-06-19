@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "811788715973",
+    "project_id": "app1-7d097",
+    "storage_bucket": "app1-7d097.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:811788715973:android:645db2f6b4500af9f5edac",
+        "android_client_info": {
+          "package_name": "com.example.restful"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "811788715973-pc0ulofbi1a3hi9qvvt9s75tu5omfn8m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwSUpvL3KNuD2SfVB70splLAoQG0dCgJs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "811788715973-pc0ulofbi1a3hi9qvvt9s75tu5omfn8m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
