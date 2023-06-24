@@ -6,15 +6,16 @@ import 'products.dart';
 class ProductDetails extends StatelessWidget {
   final String id;
 
-  ProductDetails(this.id);
+  const ProductDetails(this.id, {super.key});
 
   @override
   Widget build(BuildContext context) {
     List<Product> prodList =
         Provider.of<Products>(context, listen: true).productsList;
 
-    var filteredItem =
-        prodList.firstWhere((element) => element.id == id, orElse: () => null);
+    var filteredItem = prodList.firstWhere((element) => element.id == id,
+        orElse: () => Product(
+            id: '', title: '', description: '', price: 0, imageUrl: ''));
 
     return Scaffold(
       appBar: AppBar(
@@ -71,16 +72,23 @@ class ProductDetails extends StatelessWidget {
           children: <Widget>[
             Text(
               title,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const Divider(color: Colors.black),
             Text(desc,
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(color: Colors.black, fontSize: 16),
                 textAlign: TextAlign.justify),
             const Divider(color: Colors.black),
             Text(
               "\$$price",
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
             ),
           ],
         ),

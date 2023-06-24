@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:js_interop';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -21,24 +22,26 @@ class Product {
 
 class Products with ChangeNotifier {
   List<Product> productsList = [];
+
   Future<void> fetchData() async {
     final url = Uri.parse(
         'https://app1-7d097-default-rtdb.firebaseio.com/product.json');
     try {
       final http.Response res = await http.get(url);
-      final extractedData = json.decode(res.body) as Map<String, dynamic>;
+      final Map<String, dynamic> extractedData =
+          json.decode(res.body) as Map<String, dynamic>;
       extractedData.forEach((prodId, prodData) {
-        final prodIndex =
-            productsList.indexWhere((element) => element.id == prodId);
-        if (prodIndex >= 0) {
-          productsList[prodIndex] = Product(
-            id: prodId,
-            title: prodData['title'],
-            description: prodData['description'],
-            price: prodData['price'],
-            imageUrl: prodData['imageUrl'],
-          );
-        } else {
+        var isExist = productsList.firstWhere(
+          (element) => element.id == prodId,
+          orElse: () => Product(
+            id: '',
+            title: '',
+            description: '',
+            price: 0.0,
+            imageUrl: '',
+          ),
+        );
+        if (isExist.isNull) {
           productsList.add(Product(
             id: prodId,
             title: prodData['title'],
@@ -49,6 +52,70 @@ class Products with ChangeNotifier {
         }
       });
 
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
+  }
+  // Future<void> fetchData() async {
+  //   final url = Uri.parse(
+  //       'https://app1-7d097-default-rtdb.firebaseio.com/product.json');
+  //   try {
+  //     final http.Response res = await http.get(url);
+  //     final extractedData = json.decode(res.body) as Map<String, dynamic>;
+  //     extractedData.forEach((prodId, prodData) {
+  //       final prodIndex =
+  //           productsList.indexWhere((element) => element.id == prodId);
+  //       if (prodIndex >= 0) {
+  //         productsList[prodIndex] = Product(
+  //           id: prodId,
+  //           title: prodData['title'],
+  //           description: prodData['description'],
+  //           price: prodData['price'],
+  //           imageUrl: prodData['imageUrl'],
+  //         );
+  //       } else {
+  //         productsList.add(Product(
+  //           id: prodId,
+  //           title: prodData['title'],
+  //           description: prodData['description'],
+  //           price: prodData['price'],
+  //           imageUrl: prodData['imageUrl'],
+  //         ));
+  //       }
+  //     });
+
+  //     notifyListeners();
+  //   } catch (error) {
+  //     rethrow;
+  //   }
+  // }
+
+  Future<void> add({
+    required String id,
+    required String title,
+    required String description,
+    required double price,
+    required String imageUrl,
+  }) async {
+    try {
+      final url = Uri.parse(
+          'https://app1-7d097-default-rtdb.firebaseio.com/product.json');
+      var res = await http.post(url,
+          body: json.encode({
+            'id': id,
+            'title': title,
+            'description': description,
+            'price': price,
+            'imageUrl': imageUrl,
+          }));
+
+      productsList.add(Product(
+          id: json.decode(res.body)['name'],
+          title: title,
+          description: description,
+          price: price,
+          imageUrl: imageUrl));
       notifyListeners();
     } catch (error) {
       rethrow;
@@ -83,34 +150,6 @@ class Products with ChangeNotifier {
     } else {
       print("...");
     }
-  }
-
-  Future<void> add(
-      {required String id,
-      required String title,
-      required String description,
-      required double price,
-      required String imageUrl}) async {
-    final url = Uri.parse(
-        'https://app1-7d097-default-rtdb.firebaseio.com/product.json');
-    return http
-        .post(url,
-            body: json.encode({
-              'id': id,
-              'title': title,
-              'description': description,
-              'price': price,
-              'imageUrl': imageUrl,
-            }))
-        .then((res) {
-      productsList.add(Product(
-          id: json.decode(res.body)['name'],
-          title: title,
-          description: description,
-          price: price,
-          imageUrl: imageUrl));
-      notifyListeners();
-    });
   }
 
   void delete(String id) {

@@ -8,6 +8,7 @@ class AddProduct extends StatefulWidget {
   const AddProduct({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _AddProductState createState() => _AddProductState();
 }
 
@@ -26,7 +27,10 @@ class _AddProductState extends State<AddProduct> {
         title: const Text('Add Product'),
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(
+              child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor,
+            ))
           : Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: ListView(
@@ -61,7 +65,7 @@ class _AddProductState extends State<AddProduct> {
                             textStyle: const TextStyle(color: Colors.black)),
                         child: const Text("Add Product"),
                         onPressed: () {
-                          var doublePrice;
+                          double? doublePrice;
                           setState(() {
                             doublePrice = double.tryParse(price) ?? 0.0;
                           });
@@ -88,7 +92,7 @@ class _AddProductState extends State<AddProduct> {
                               id: DateTime.now().toString(),
                               title: title,
                               description: description,
-                              price: doublePrice,
+                              price: doublePrice!,
                               imageUrl: imageUrl,
                             )
                                 .catchError((_) {
@@ -99,9 +103,19 @@ class _AddProductState extends State<AddProduct> {
                                   content: const Text('Something went wrong.'),
                                   actions: [
                                     TextButton(
-                                        child: const Text("Okay"),
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  Colors.redAccent),
+                                        ),
                                         onPressed: () =>
-                                            Navigator.of(innerContext).pop())
+                                            Navigator.of(innerContext).pop(),
+                                        child: Text(
+                                          "Okay",
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                        ))
                                   ],
                                 ),
                               );
